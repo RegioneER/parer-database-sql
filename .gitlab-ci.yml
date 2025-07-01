@@ -1,0 +1,25 @@
+# default
+# template base
+include:
+  - project: 'parer/pipeline-template'
+    ref: v2.0
+    file: 
+      - '/common/default.gitlab-ci.yml'
+    inputs:
+      component_ref: v2.0
+
+
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" || $CI_PIPELINE_SOURCE == "push"' 
+
+
+pages:
+  stage: update
+  extends: .base
+  image: $CI_REGISTRY/parer/containers/alpine-cicd:v2.0
+  before_script:
+    - !reference [.git-push-before, before_script] # include reference from hidden job (@see dind/Default.gitlab-ci.yml)   
+  script:
+    - liquibase -version
