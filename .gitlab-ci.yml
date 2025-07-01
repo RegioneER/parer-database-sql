@@ -49,3 +49,5 @@ liquibase-changelog:
       fi  
     - echo -e "\e[1;32m[INFO] Making dir ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION if not exits...\e[0;m"
     - mkdir -p ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION # create dir if not exits
+    - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
+    - cd ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION
