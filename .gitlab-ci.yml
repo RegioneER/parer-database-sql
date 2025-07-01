@@ -35,7 +35,7 @@ liquibase-changelog:
       for ns in `ls | grep ns`;  
         do 
           test=$(echo $ns | awk -F 'ns-' '{print $2}');
-          if [[ $CI_DB_NAMESPACE == $test ]]; then
+          if [[ ${CI_DB_NAMESPACE^^} == ${test^^} ]]; then
             found=true
           fi;  
         done;
