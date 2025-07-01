@@ -51,3 +51,4 @@ liquibase-changelog:
     - mkdir -p ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION # create dir if not exits
     - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
     - cd ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION
+    - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
