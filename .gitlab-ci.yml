@@ -19,7 +19,36 @@ liquibase-changelog:
   stage: build
   extends: .base
   image: $CI_REGISTRY/parer/containers/alpine-cicd:v3.0
+  variables:
+    CI_DB_NAMESPACE: "" # by default : empty
+    CI_APP_VERSION: "" # by default : empty
   before_script:
     - !reference [.git-push-before, before_script] # include reference from hidden job (@see dind/Default.gitlab-ci.yml)   
+  before_script:
+    - !reference [.debug-lastcmd, setup] # include reference from hidden job (@see common/default.gitlab-ci.yml)         
+    - if [ -z "$CI_DB_NAMESPACE" ]; then echo -e "\033[31m[ERR] CI_DB_NAMESPACE non imposato!""\033[0;m"; exit 1; fi
+    - if [ -z "$CI_APP_VERSION" ]; then echo -e "\033[31m[ERR] CI_APP_VERSION non imposato!""\033[0;m"; exit 1; fi
   script:
     - liquibase -version
+    - | 
+      found=false
+      for ns in `ls | grep ns`;  
+        do 
+          test=$(echo $ns | awk -F 'ns-' '{print $2}');
+          if [[ $CI_DB_NAMESPACE == $test ]]; then
+            found=true
+          fi;  
+        done;
+      if [[ "$found" == "false" ]]; then
+        echo -e "\033[31m[ERR] Il valore "${CI_DB_NAMESPACE}" non rientra tra quelli previsti dal progetto !""\033[0;m"; 
+        exit 1;
+      fi
+    - if [[ ! $CI_APP_VERSION =~ ^[0-9][0-9.]*$ ]]
+       then
+        echo -e "\033[31m[ERR] Il valore "${CI_APP_VERSION}" non è corretto, indicare una versione di tipo X.K.Z""\033[0;m"; 
+      fi  
+    - echo -e "\e[1;32m[INFO] Making dir ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION if not exits...\e[0;m"
+    - mkdir -p ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION # create dir if not exits
+    - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
+    - cd ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION
+    - # TODO ... launch script liquibase     
