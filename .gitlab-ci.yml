@@ -32,9 +32,9 @@ liquibase-changelog:
     - liquibase -version
     - | 
       found=false
-      for ns in `ls | grep ns`;  
+      for sch in `ls | grep sch`;  
         do 
-          test=$(echo $ns | awk -F 'ns-' '{print $2}');
+          test=$(echo $sch | awk -F 'sch-' '{print $2}');
           if [[ ${CI_DB_NAMESPACE^^} == ${test^^} ]]; then
             found=true
           fi;  
@@ -47,8 +47,8 @@ liquibase-changelog:
        then
         echo -e "\033[31m[ERR] Il valore "${CI_APP_VERSION}" non è corretto, indicare una versione di tipo X.K.Z""\033[0;m"; 
       fi  
-    - echo -e "\e[1;32m[INFO] Making dir ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION if not exits...\e[0;m"
-    - mkdir -p ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION # create dir if not exits
+    - echo -e "\e[1;32m[INFO] Making dir sch-$CI_DB_NAMESPACE/v$CI_APP_VERSION if not exits...\e[0;m"
+    - mkdir -p sch-${CI_DB_NAMESPACE^^}/v$CI_APP_VERSION # create dir if not exits (to upper case)
     - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
-    - cd ns-$CI_DB_NAMESPACE/v$CI_APP_VERSION
+    - cd sch-$CI_DB_NAMESPACE/v$CI_APP_VERSION
     - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
