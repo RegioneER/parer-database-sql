@@ -12,7 +12,7 @@ include:
 
 workflow:
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"' 
+    - if: '$CI_PIPELINE_SOURCE == "web" || $CI_PIPELINE_SOURCE == "pipeline"' 
 
 
 liquibase-sql:
