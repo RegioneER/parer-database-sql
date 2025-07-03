@@ -42,7 +42,7 @@ create-changelog-and-diff:
     - if [[ -z "$CI_LQ_APP_RELEASE" ]]; then test_param=false;  echo -e "\033[31m[ERR] CI_LQ_APP_RELEASE non impostato!""\033[0;m"; fi
     - | 
       if [[ "$test_param" == "false" ]]; then 
-        echo -e "\e[1;32m[INFO] Parametri richiesti LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME / LIQUIBASE_COMMAND_USERNAME / LIQUIBASE_COMMAND_PASSWORD /   LIQUIBASE_COMMAND_REFERENCE_USERNAME / LIQUIBASE_COMMAND_REFERENCE_PASSWORD / CI_LQ_APP_RELEASE \e[0;m"
+        echo -e "\e[1;32m[INFO] Parametri richiesti: \n LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME \n LIQUIBASE_COMMAND_USERNAME \n LIQUIBASE_COMMAND_PASSWORD \n LIQUIBASE_COMMAND_REFERENCE_USERNAME \n LIQUIBASE_COMMAND_REFERENCE_PASSWORD \n CI_LQ_APP_RELEASE \e[0;m"
         exit 1
       fi
   script:
