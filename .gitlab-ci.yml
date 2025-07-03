@@ -5,9 +5,11 @@ include:
     ref: v2.0
     file: 
       - '/common/default.gitlab-ci.yml'
+      - '/dind/update.gitlab-ci.yml'
     inputs:
       component_ref: v2.0
 
+stages: [build, update]
 
 
 workflow:
@@ -91,3 +93,9 @@ create-changelog-and-diff:
     expire_in: 2h      
 
 
+# override github sync job
+github-sync:
+  stage: update
+  rules: 
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_GITHUB_REPOSITORY_URL' # on push and CI_GITHUB_REPOSITORY_URL exists on project
+      when: always
