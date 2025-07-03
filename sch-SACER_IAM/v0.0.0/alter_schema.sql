@@ -1,1 +1,0 @@
-Template alter database (delta)
