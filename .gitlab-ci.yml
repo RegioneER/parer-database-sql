@@ -35,11 +35,11 @@ create-changelog-and-diff:
     - !reference [.debug-lastcmd, setup] # include reference from hidden job (@see common/default.gitlab-ci.yml)     
     - test_param=true    
     - if [[ -z "$LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME" ]]; then test_param=false;  echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME non impostato!""\033[0;m"; fi
-    - if [[ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_USERNAME" ]]; then test_param=false;  echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_USERNAME non impostato!""\033[0;m"; fi
-    - if [[ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_PASSWORD" ]]; then test_param=false;  echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_PASSWORD non impostato!""\033[0;m"; fi
-    - if [[ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_REFERENCE_USERNAME" ]]; then test_param=false;  echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_USERNAME non impostato!""\033[0;m"; fi
-    - if [[ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_REFERENCE_PASSWORD" ]]; then test_param=false;  echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_PASSWORD non impostato!""\033[0;m"; fi
-    - if [[ "$test_param" == "true" && -z "$CI_LQ_APP_RELEASE" ]]; then test_param=false;  echo -e "\033[31m[ERR] CI_LQ_APP_RELEASE non impostato!""\033[0;m"; fi
+    - if [[ -z "$LIQUIBASE_COMMAND_USERNAME" ]]; then test_param=false;  echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_USERNAME non impostato!""\033[0;m"; fi
+    - if [[ -z "$LIQUIBASE_COMMAND_PASSWORD" ]]; then test_param=false;  echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_PASSWORD non impostato!""\033[0;m"; fi
+    - if [[ -z "$LIQUIBASE_COMMAND_REFERENCE_USERNAME" ]]; then test_param=false;  echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_USERNAME non impostato!""\033[0;m"; fi
+    - if [[ -z "$LIQUIBASE_COMMAND_REFERENCE_PASSWORD" ]]; then test_param=false;  echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_PASSWORD non impostato!""\033[0;m"; fi
+    - if [[ -z "$CI_LQ_APP_RELEASE" ]]; then test_param=false;  echo -e "\033[31m[ERR] CI_LQ_APP_RELEASE non impostato!""\033[0;m"; fi
     - | 
       if [[ "$test_param" == "false" ]]; then 
         echo -e "\e[1;32m[INFO] Parametri richiesti LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME / LIQUIBASE_COMMAND_USERNAME / LIQUIBASE_COMMAND_PASSWORD /   LIQUIBASE_COMMAND_REFERENCE_USERNAME / LIQUIBASE_COMMAND_REFERENCE_PASSWORD / CI_LQ_APP_RELEASE \e[0;m"
