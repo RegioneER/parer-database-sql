@@ -1,0 +1,29 @@
+## Consultare documentazione Liquibase https://docs.liquibase.com/parameters/home.html
+
+# Connessione al database target (RIUSO)
+liquibase.command.url=URL
+liquibase.command.username=USERNAME
+liquibase.command.password=PASSWORD
+
+# Connessione al database source (TEST)
+liquibase.command.referenceUrl=REFERENCE_URL
+liquibase.command.referenceUsername=REFERENCE_USERNAME
+liquibase.command.referencePassword=REFERENCE_PASSWORD
+
+
+# Driver
+driver=DRIVER
+
+# Schema di default (opzionale)
+defaultSchemaName=DEFAULT_SCHEMA_NAME
+
+# Logging Configuration
+# logLevel controls the amount of logging information generated. If not set, the default logLevel is INFO.
+# Valid values, from least amount of logging to most, are:
+#   OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
+# If you are having problems, setting the logLevel to DEBUG and re-running the command can be helpful.
+logLevel=LOG_LEVEL
+
+# The logFile property controls where logging messages are sent. If this is not set, then logging messages are
+# displayed on the console. If this is set, then messages will be sent to a file with the given name.
+splitStatements=true
