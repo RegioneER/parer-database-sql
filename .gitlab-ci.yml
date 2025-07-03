@@ -15,40 +15,71 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "web"' 
 
 
-liquibase-changelog:
+liquibase-sql:
   stage: build
   extends: .base
   image: $CI_REGISTRY/parer/containers/alpine-cicd:v3.0
   variables:
-    CI_DB_NAMESPACE: "" # by default : empty
-    CI_APP_VERSION: "" # by default : empty
+    CI_LQ_APP_RELEASE: "" # by default : empty
+    LIQUIBASE_COMMAND_USERNAME: ""  # env liquibase username (https://docs.liquibase.com/parameters/home.html)
+    LIQUIBASE_COMMAND_PASSWORD: ""  # env liquibase password (https://docs.liquibase.com/parameters/home.html)
+    LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME: ""  # env liquibase schema name (https://docs.liquibase.com/parameters/home.html)
+    LIQUIBASE_COMMAND_URL: "" # env liquibase database URL (https://docs.liquibase.com/parameters/home.html)
+    LIQUIBASE_COMMAND_REFERENCE_URL: "" # env liquibase reference database URL (https://docs.liquibase.com/parameters/home.html)
+    LIQUIBASE_COMMAND_REFERENCE_USERNAME: "" # env liquibase reference username (https://docs.liquibase.com/parameters/home.html)
+    LIQUIBASE_COMMAND_REFERENCE_PASSWORD: "" # env liquibase reference password (https://docs.liquibase.com/parameters/home.html)    
+    LIQUIBASE_DRIVER: "oracle.jdbc.OracleDriver" # env liquibase database driver (https://docs.liquibase.com/parameters/home.html) 
+    LIQUIBASE_LOG_LEVEL: "ERROR" # env liquibase log level (https://docs.liquibase.com/parameters/home.html) 
   before_script:
     - !reference [.git-push-before, before_script] # include reference from hidden job (@see dind/Default.gitlab-ci.yml)   
   before_script:
     - !reference [.debug-lastcmd, setup] # include reference from hidden job (@see common/default.gitlab-ci.yml)         
-    - if [ -z "$CI_DB_NAMESPACE" ]; then echo -e "\033[31m[ERR] CI_DB_NAMESPACE non imposato!""\033[0;m"; exit 1; fi
-    - if [ -z "$CI_APP_VERSION" ]; then echo -e "\033[31m[ERR] CI_APP_VERSION non imposato!""\033[0;m"; exit 1; fi
+    - if [ -z "$LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME" ]; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME non impostato!""\033[0;m"; exit 1; fi
+    - if [ -z "$LIQUIBASE_COMMAND_USERNAME" ]; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_USERNAME non impostato!""\033[0;m"; exit 1; fi
+    - if [ -z "$LIQUIBASE_COMMAND_PASSWORD" ]; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_PASSWORD non impostato!""\033[0;m"; exit 1; fi
+    - if [ -z "$LIQUIBASE_COMMAND_URL" ]; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_URL non impostato!""\033[0;m"; exit 1; fi
+    - if [ -z "$LIQUIBASE_COMMAND_REFERENCE_URL" ]; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_URL non impostato!""\033[0;m"; exit 1; fi
+    - if [ -z "$LIQUIBASE_COMMAND_REFERENCE_USERNAME" ]; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_USERNAME non impostato!""\033[0;m"; exit 1; fi
+    - if [ -z "$LIQUIBASE_COMMAND_REFERENCE_PASSWORD" ]; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_PASSWORD non impostato!""\033[0;m"; exit 1; fi
+    - if [ -z "$CI_LQ_APP_RELEASE" ]; then echo -e "\033[31m[ERR] CI_LQ_APP_RELEASE non impostato!""\033[0;m"; exit 1; fi
   script:
-    - liquibase -version
     - | 
       found=false
       for sch in `ls | grep sch`;  
         do 
           test=$(echo $sch | awk -F 'sch-' '{print $2}');
-          if [[ ${CI_DB_NAMESPACE^^} == ${test^^} ]]; then
+          if [[ ${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^} == ${test^^} ]]; then
             found=true
           fi;  
         done;
       if [[ "$found" == "false" ]]; then
-        echo -e "\033[31m[ERR] Il valore "${CI_DB_NAMESPACE}" non rientra tra quelli previsti dal progetto !""\033[0;m"; 
+        echo -e "\033[31m[ERR] Il valore "${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME}" non rientra tra quelli previsti dal progetto !""\033[0;m"; 
         exit 1;
       fi
-    - if [[ ! $CI_APP_VERSION =~ ^[0-9][0-9.]*$ ]]
+    - if [[ ! $CI_LQ_APP_RELEASE =~ ^[0-9][0-9.]*$ ]]
        then
-        echo -e "\033[31m[ERR] Il valore "${CI_APP_VERSION}" non è corretto, indicare una versione di tipo X.K.Z""\033[0;m"; 
+        echo -e "\033[31m[ERR] Il valore "${CI_LQ_APP_RELEASE}" non è corretto, indicare una versione di tipo X.K.Z""\033[0;m"; 
       fi  
-    - echo -e "\e[1;32m[INFO] Making dir sch-$CI_DB_NAMESPACE/v$CI_APP_VERSION if not exits...\e[0;m"
-    - mkdir -p sch-${CI_DB_NAMESPACE^^}/v$CI_APP_VERSION # create dir if not exits (to upper case)
+    - echo -e "\e[1;32m[INFO] Making dir sch-$LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME/v$CI_LQ_APP_RELEASE if not exist...\e[0;m"
+    - mkdir -p sch-${CI_LQ_DEFAULT_SCHEMA^^}/v$CI_LQ_APP_RELEASE # create dir if not exits (to upper case)
     - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
-    - cd sch-$CI_DB_NAMESPACE/v$CI_APP_VERSION
+    - | # liquibase changelog
+      liquibase generate-changelog --changelog-file=sch-${CI_LQ_DEFAULT_SCHEMA^^}/v${CI_LQ_APP_RELEASE^^}/create.${CI_LQ_DEFAULT_SCHEMA^^}.v${CI_LQ_APP_RELEASE^^}.oracle.sql
     - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
+    - | # liqubase diffchangelog
+      liquibase diff-changelog --changelog-file=sch-${CI_LQ_DEFAULT_SCHEMA^^}/v${CI_LQ_APP_RELEASE^^}/alter.${CI_LQ_DEFAULT_SCHEMA^^}.v${CI_LQ_APP_RELEASE^^}.oracle.sql
+    - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
+    - | # push 
+      if [ -n "$(git status --porcelain *.sql)" ]; then
+        git checkout -B "$CI_COMMIT_REF_NAME"
+        git add *.sql
+        git commit -m "[ci skip] Aggiornamento script sql on sch-${CI_LQ_DEFAULT_SCHEMA^^}/v${CI_LQ_APP_RELEASE^^}"
+        git push origin $CI_COMMIT_REF_NAME:${CI_COMMIT_REF_NAME}
+      fi
+  artifacts:
+    name: liquibase-sql_${CI_JOB_ID}  
+    paths:
+      - sch-${CI_LQ_DEFAULT_SCHEMA^^}/v${CI_LQ_APP_RELEASE^^}
+    expire_in: 2h      
+
+
