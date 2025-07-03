@@ -32,7 +32,6 @@ liquibase-sql:
     LIQUIBASE_LOG_LEVEL: "ERROR" # env liquibase log level (https://docs.liquibase.com/parameters/home.html) 
   before_script:
     - !reference [.git-push-before, before_script] # include reference from hidden job (@see dind/Default.gitlab-ci.yml)   
-  before_script:
     - !reference [.debug-lastcmd, setup] # include reference from hidden job (@see common/default.gitlab-ci.yml)         
     - if [ -z "$LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME" ]; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME non impostato!""\033[0;m"; exit 1; fi
     - if [ -z "$LIQUIBASE_COMMAND_USERNAME" ]; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_USERNAME non impostato!""\033[0;m"; exit 1; fi
