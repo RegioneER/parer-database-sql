@@ -72,10 +72,10 @@ create-changelog-and-diff:
     - mkdir -p sch-${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^}/v$CI_LQ_APP_RELEASE # create dir if not exits (to upper case)
     - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
     - | # liquibase changelog
-      liquibase generate-changelog --changelog-file=sch-${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^}/v${CI_LQ_APP_RELEASE^^}/create.${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^}.v${CI_LQ_APP_RELEASE^^}.oracle.sql
+      liquibase generate-changelog --changelog-file=sch-${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^}/v${CI_LQ_APP_RELEASE^^}/create.${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^}.${CI_LQ_APP_RELEASE//./}}.oracle.sql
     - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
     - | # liqubase diffchangelog
-      liquibase diff-changelog --changelog-file=sch-${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^}/v${CI_LQ_APP_RELEASE^^}/alter.${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^}.v${CI_LQ_APP_RELEASE^^}.oracle.sql
+      liquibase diff-changelog --changelog-file=sch-${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^}/v${CI_LQ_APP_RELEASE^^}/alter.${LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME^^}.${CI_LQ_APP_RELEASE//./}}.oracle.sql
     - !reference [.debug-lastcmd, print] # include reference from hidden job (@see common/default.gitlab-ci.yml)   
     - | # push 
       if [ -n "$(git status --porcelain *.sql)" ]; then
