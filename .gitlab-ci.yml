@@ -15,7 +15,7 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "web" || $CI_PIPELINE_SOURCE == "pipeline"' 
 
 
-liquibase-sql:
+create-changelog-and-diffchangelog:
   stage: build
   extends: .base
   image: $CI_REGISTRY/parer/containers/alpine-cicd:v3.0
@@ -34,12 +34,12 @@ liquibase-sql:
     - !reference [.git-push-before, before_script] # include reference from hidden job (@see dind/Default.gitlab-ci.yml)   
     - !reference [.debug-lastcmd, setup] # include reference from hidden job (@see common/default.gitlab-ci.yml)     
     - test_param=true    
-    - if [ -z "$LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME" ]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME non impostato!""\033[0;m"; fi
-    - if [ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_USERNAME" ]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_USERNAME non impostato!""\033[0;m"; fi
-    - if [ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_PASSWORD" ]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_PASSWORD non impostato!""\033[0;m"; fi
-    - if [ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_REFERENCE_USERNAME" ]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_USERNAME non impostato!""\033[0;m"; fi
-    - if [ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_REFERENCE_PASSWORD" ]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_PASSWORD non impostato!""\033[0;m"; fi
-    - if [ "$test_param" == "true" && -z "$CI_LQ_APP_RELEASE" ]; test_param=false; then echo -e "\033[31m[ERR] CI_LQ_APP_RELEASE non impostato!""\033[0;m"; fi
+    - if [[ -z "$LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME" ]]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME non impostato!""\033[0;m"; fi
+    - if [[ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_USERNAME" ]]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_USERNAME non impostato!""\033[0;m"; fi
+    - if [[ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_PASSWORD" ]]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_PASSWORD non impostato!""\033[0;m"; fi
+    - if [[ "$test_param" == "true" && -z "$LIQUIBASE_COMMAND_REFERENCE_USERNAME" ]]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_USERNAME non impostato!""\033[0;m"; fi
+    - if [["$test_param" == "true" && -z "$LIQUIBASE_COMMAND_REFERENCE_PASSWORD" ]]; test_param=false; then echo -e "\033[31m[ERR] LIQUIBASE_COMMAND_REFERENCE_PASSWORD non impostato!""\033[0;m"; fi
+    - if [[ "$test_param" == "true" && -z "$CI_LQ_APP_RELEASE" ]]; test_param=false; then echo -e "\033[31m[ERR] CI_LQ_APP_RELEASE non impostato!""\033[0;m"; fi
     - | 
       if [[ "$test_param" == "false" ]]; then 
         echo -e "\e[1;32m[INFO] Parametri richiesti LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME / LIQUIBASE_COMMAND_USERNAME / LIQUIBASE_COMMAND_PASSWORD /   LIQUIBASE_COMMAND_REFERENCE_USERNAME / LIQUIBASE_COMMAND_REFERENCE_PASSWORD / CI_LQ_APP_RELEASE \e[0;m"
