@@ -1,4 +1,4 @@
-# Guida alla prima installazione base dati Oracle Db
+# Guida alla prima installazione base dati Oracle DB
 
 Fonte template redazione documento:  https://www.makeareadme.com/.
 
