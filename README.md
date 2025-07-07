@@ -9,7 +9,7 @@ Il seguente progetto contiene, per ogni applicazione dell'ecosistema ParER, gli 
 Il progetto è strutturato come segue: 
 - la directory di primo livello, si riferisce al singolo progetto/schema (e.g. SACER);
 - la directory di secondo livello, la versione applicativa (vedere su relativo progetto -> releases);
-- infine, gli vari script standard sql suddivisi per : creazione dello schema (create_SCHEMA_VERSIONE_oracle.sql), modifiche / alterazioni di qualunque natura (alter_SCHEMA_VERSIONE_oracle.sql), e.g. create_**sacer**_**1_0_0**_oracle.sql, alter_**sacer**_**1_0_0**_oracle.sql
+- infine, gli vari script standard sql suddivisi per : creazione dello schema (create_SCHEMA_VERSIONE_oracle.sql), modifiche / alterazioni di qualunque natura (alter_SCHEMA_VERSIONE_oracle.sql), e.g. create_sacer_1_0_0_oracle.sql, alter_sacer_1_0_0_oracle.sql
 
 # Requisiti database
 
