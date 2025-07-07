@@ -37,5 +37,4 @@ Questo progetto è rilasciato sotto licenza GNU Affero General Public License v3
 
 Tool utilizzati: 
 
-* 7 zip: https://www.7-zip.org/download.html/
 * Oracle DB : https://www.oracle.com/it/database/
